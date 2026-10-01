@@ -149,6 +149,15 @@ if (createBtn) {
   });
 }
 
+// =========================
+// PACKAGE "GET STARTED" BUTTONS
+// =========================
+document.querySelectorAll(".package-card .primary-btn").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    window.location.href = "../HTML/AccountSignIn.html#loginView";
+  });
+});
+
 // 1. Connect to your real-time WebSocket server
 const socket = io('https://your-backend-server.com');
 
