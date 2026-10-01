@@ -23,6 +23,14 @@
   document.querySelectorAll("[data-view]").forEach((button) => {
     button.addEventListener("click", () => showView(button.dataset.view));
   });
+    // Open the view requested by the URL (#signupView or #loginView).
+  // Anything else falls back to Log In.
+  function showViewFromHash() {
+    showView(window.location.hash === "#signupView" ? "signup" : "login");
+  }
+
+  showViewFromHash();
+  window.addEventListener("hashchange", showViewFromHash);
 
   function showNotice(element, message, isError = false) {
     element.textContent = message;
