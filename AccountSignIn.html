@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#438cf2">
+
+  <title>BeyondWires | Account</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../CSS/AccountSignIn.css">
+
+  <!-- JavaScript -->
+  <script src="../JS/AccountSignIn.js" defer></script>
+</head>
+
+<body>
+
+  <main class="page-shell">
+
+    <section class="auth-card" aria-label="BeyondWires account access">
+
+      <!-- ================= SIGN UP VIEW ================= -->
+
+      <section
+        class="auth-view signup-view"
+        id="signupView"
+        aria-labelledby="signupTitle"
+        hidden
+      >
+
+        <!-- Left Branding Panel -->
+        <aside class="brand-panel">
+
+          <div class="brand-lockup" aria-label="BeyondWires">
+
+            <div class="brand-mark">
+              <span>B</span>
+              <span>W</span>
+            </div>
+
+            <strong>BEYONDWIRES</strong>
+            <small>SECURITY SYSTEMS</small>
+
+          </div>
+
+        </aside>
+
+        <!-- Right Sign Up Form -->
+        <div class="form-panel">
+
+          <div class="form-content">
+
+            <h1 id="signupTitle">Create Account</h1>
+
+            <p class="subtitle">
+              Get started with your BeyondWires account today.
+            </p>
+
+            <div
+              class="notice"
+              id="signupNotice"
+              role="status"
+              aria-live="polite"
+            ></div>
+
+            <form id="signupForm" novalidate>
+
+              <!-- First and Last Name -->
+              <div class="name-grid">
+
+                <label class="field">
+
+                  <span>First Name</span>
+
+                  <input
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    placeholder="John"
+                    autocomplete="given-name"
+                    required
+                  >
+
+                  <small
+                    class="field-error"
+                    id="firstNameError"
+                  ></small>
+
+                </label>
+
+                <label class="field">
+
+                  <span>Last Name</span>
+
+                  <input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    placeholder="Doe"
+                    autocomplete="family-name"
+                    required
+                  >
+
+                  <small
+                    class="field-error"
+                    id="lastNameError"
+                  ></small>
+
+                </label>
+
+              </div>
+
+              <!-- Email Address -->
+              <label class="field">
+
+                <span>Email Address</span>
+
+                <input
+                  id="signupEmail"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                  required
+                >
+
+                <small
+                  class="field-error"
+                  id="signupEmailError"
+                ></small>
+
+              </label>
+
+              <!-- Create Password -->
+              <label class="field">
+
+                <span>Create Password</span>
+
+                <div class="password-wrap">
+
+                  <input
+                    id="signupPassword"
+                    name="password"
+                    type="password"
+                    placeholder="Create a password"
+                    autocomplete="new-password"
+                    required
+                  >
+
+                  <!-- Password Visibility Toggle -->
+                  <button
+                    class="eye-toggle"
+                    type="button"
+                    data-password="signupPassword"
+                    aria-label="Show password"
+                    aria-pressed="false"
+                  >
+
+                    <svg
+                      class="eye-icon"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+
+                  </button>
+
+                </div>
+
+                <small class="field-hint">
+                  Use at least 8 characters, including a number.
+                </small>
+
+                <small
+                  class="field-error"
+                  id="signupPasswordError"
+                ></small>
+
+              </label>
+
+              <!-- Create Account Button -->
+              <button class="primary-button" type="submit">
+                Create Account
+              </button>
+
+            </form>
+
+            <!-- Switch to Login -->
+            <p class="switch-copy">
+              Already have an account?
+
+              <button
+                class="text-button"
+                type="button"
+                data-view="login"
+              >
+                Log In
+              </button>
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= LOG IN VIEW ================= -->
+
+      <section
+        class="auth-view login-view"
+        id="loginView"
+        aria-labelledby="loginTitle"
+      >
+
+        <!-- Left Login Form -->
+        <div class="form-panel">
+
+          <div class="form-content">
+
+            <h1 id="loginTitle">Welcome Back</h1>
+
+            <p class="subtitle">
+              Log in to access your account and manage your projects.
+            </p>
+
+            <div
+              class="notice"
+              id="loginNotice"
+              role="status"
+              aria-live="polite"
+            ></div>
+
+            <form id="loginForm" novalidate>
+
+              <!-- Email -->
+              <label class="field">
+
+                <span>Email</span>
+
+                <input
+                  id="loginEmail"
+                  name="email"
+                  type="email"
+                  placeholder="Enter your email address"
+                  autocomplete="email"
+                  required
+                >
+
+                <small
+                  class="field-error"
+                  id="loginEmailError"
+                ></small>
+
+              </label>
+
+              <!-- Password -->
+              <label class="field">
+
+                <span>Enter Password</span>
+
+                <div class="password-wrap">
+
+                  <input
+                    id="loginPassword"
+                    name="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                  >
+
+                  <!-- Password Visibility Toggle -->
+                  <button
+                    class="eye-toggle"
+                    type="button"
+                    data-password="loginPassword"
+                    aria-label="Show password"
+                    aria-pressed="false"
+                  >
+
+                    <svg
+                      class="eye-icon"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+
+                  </button>
+
+                </div>
+
+                <small
+                  class="field-error"
+                  id="loginPasswordError"
+                ></small>
+
+              </label>
+
+              <!-- Login Button -->
+              <button class="primary-button" type="submit">
+                Log In
+              </button>
+
+            </form>
+
+            <!-- Switch to Signup -->
+            <p class="switch-copy">
+              Don't have an account?
+
+              <button
+                class="text-button"
+                type="button"
+                data-view="signup"
+              >
+                Create one
+              </button>
+            </p>
+
+          </div>
+
+        </div>
+
+        <!-- Right Branding Panel -->
+        <aside class="brand-panel">
+
+          <div class="brand-lockup" aria-label="BeyondWires">
+
+            <div class="brand-mark">
+              <span>B</span>
+              <span>W</span>
+            </div>
+
+            <strong>BEYONDWIRES</strong>
+            <small>SECURITY SYSTEMS</small>
+
+          </div>
+
+        </aside>
+
+      </section>
+
+    </section>
+
+  </main>
+
+</body>
+</html>
