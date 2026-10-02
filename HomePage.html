@@ -47,45 +47,34 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
     </div>
 
-    <div class="dropdown-wrapper">
-      <button class="notification-btn" id="notifBtn" title="Notifications" aria-expanded="false">
+    <div class="dropdown-container">
+      <button class="notification-btn" id="notifBtn" data-dd="notifMenu" title="Notifications">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 8.5h18C21 16 18 16 18 9Z"/><path d="M10 20h4"/></svg>
         <span class="badge" id="notifBadge">3</span>
       </button>
-
-      <div class="dropdown-panel" id="notifMenu">
+      <div class="dropdown-menu notif-menu" id="notifMenu" data-keep>
         <div class="dropdown-header">
-          <span class="dropdown-title">Notifications</span>
-          <button class="action-btn" id="markAllRead">Mark all as read</button>
+          <strong>Notifications</strong>
+          <span class="mark-read" id="markAllRead">Mark all as read</span>
         </div>
-        <div class="notif-list" id="notifList">
-          <!-- paste your 6 original <div class="notif-item ..."> blocks here, unchanged -->
-        </div>
-        <div class="dropdown-footer"><button class="footer-btn" id="viewAllNotifs">View All Notifications</button></div>
+        <div class="notif-list" id="notifList"></div>
+        <button class="menu-btn center" id="viewAllNotifs">View All Notifications</button>
       </div>
     </div>
 
-    <div class="dropdown-wrapper">
-      <div class="profile-card" id="accountBtn" tabindex="0" role="button" aria-expanded="false">
+    <div class="dropdown-container">
+      <div class="profile-card" id="accountBtn" data-dd="accountMenu" tabindex="0" role="button">
         <div class="avatar profile-avatar">JC</div>
         <div class="profile-info"><div class="profile-name">Juan Dela Cruz</div><div class="profile-role">Client ID: #BW-9482</div></div>
         <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
       </div>
-
-      <div class="dropdown-card" id="accountMenu">
+      <div class="dropdown-menu" id="accountMenu">
         <div class="user-info">
           <div class="user-name">Juan Dela Cruz</div>
           <div class="user-email">juan@email.com</div>
         </div>
-        <div class="dropdown-divider"></div>
-        <a href="#settings" class="account-item" id="myAccountLink">
-          <!-- your original gear <svg> here -->
-          My Account
-        </a>
-        <button class="account-item logout-btn" id="logoutBtn">
-          <!-- your original logout <svg> here -->
-          Log Out
-        </button>
+        <button class="menu-btn" id="myAccountLink"><i class="fa-solid fa-gear"></i> My Account</button>
+        <button class="menu-btn danger" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
       </div>
     </div>
   </div>
