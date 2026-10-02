@@ -1,5 +1,4 @@
-
-  {
+{
     const sidebar = document.getElementById('sidebar');
   const toggle = document.getElementById('sidebarToggle');
   const navItems = [...document.querySelectorAll('.nav-item[data-section]')];
@@ -59,124 +58,68 @@
 
 (function () {
   const $ = id => document.getElementById(id);
-  const notifBtn = $('notifBtn'), notifMenu = $('notifMenu');
-  const accountBtn = $('accountBtn'), accountMenu = $('accountMenu');
-  const notifBadge = $('notifBadge');
-  const closeAll = () => [notifMenu, accountMenu].forEach(m => m && m.classList.remove('show'));
-
-  notifBtn && notifBtn.addEventListener('click', e => {
-    e.stopPropagation();
-    const open = notifMenu && notifMenu.classList.contains('show');
-    closeAll(); if (notifMenu && !open) notifMenu.classList.add('show');
-  });
-  accountBtn && accountBtn.addEventListener('click', e => {
-    e.stopPropagation();
-    const open = accountMenu && accountMenu.classList.contains('show');
-    closeAll(); if (accountMenu && !open) accountMenu.classList.add('show');
-  });
-  document.addEventListener('click', e => {
-    if (notifMenu && !notifMenu.contains(e.target) && !notifBtn.contains(e.target)) notifMenu.classList.remove('show');
-    if (accountMenu && !accountMenu.contains(e.target) && !accountBtn.contains(e.target)) accountMenu.classList.remove('show');
-  });
-
-  const items = document.querySelectorAll('.notif-item');
-  const setBadge = () => {
-    if (!notifBadge) return;
-    const n = document.querySelectorAll('.notif-item.unread').length;
-    notifBadge.textContent = n; notifBadge.style.display = n ? '' : 'none';
+  const KEY = 'bw_notifs', min = 60000, now = Date.now();
+  let notifs = [];
+  try { notifs = JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) {}
+  if (!notifs.length) notifs = [
+    { text: 'Your quotation is ready for review.', time: now - 15 * min, read: false },
+    { text: 'Your inquiry was received.',          time: now - 180 * min, read: false },
+    { text: 'A technician visit was scheduled.',   time: now - 1500 * min, read: true }
+  ];
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(notifs)); } catch (e) {} };
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const ago = ts => {
+    const s = Math.max(1, Math.floor((Date.now() - ts) / 1000));
+    if (s < 60) return 'just now';
+    if (s < 3600) return Math.floor(s / 60) + ' mins ago';
+    if (s < 86400) return Math.floor(s / 3600) + ' hours ago';
+    return Math.floor(s / 86400) + ' days ago';
   };
-  $('markAllRead') && $('markAllRead').addEventListener('click', () => { items.forEach(i => i.classList.remove('unread')); setBadge(); });
-  items.forEach(i => i.addEventListener('click', () => { i.classList.remove('unread'); setBadge(); }));
-  $('viewAllNotifs') && $('viewAllNotifs').addEventListener('click', () => {
-    closeAll();
-    const n = document.querySelector('.nav-item[data-section="inquiries"]'); n && n.click();
+
+  function renderNotifs() {
+    $('notifList').innerHTML = notifs.length
+      ? notifs.map((n, i) => `<div class="notif-item ${n.read ? '' : 'unread'}" data-i="${i}"><strong>${esc(n.text)}</strong><span>${ago(n.time)}</span></div>`).join('')
+      : '<div class="notif-empty">No notifications</div>';
+    const n = notifs.filter(x => !x.read).length;
+    $('notifBadge').textContent = n;
+    $('notifBadge').style.display = n ? '' : 'none';
+  }
+
+  const closeDropdowns = () =>
+    document.querySelectorAll('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
+
+  // header dropdowns (same pattern as SuperHomePage.js)
+  document.querySelectorAll('[data-dd]').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation();
+    const el = $(b.dataset.dd), open = el.classList.contains('show');
+    closeDropdowns();
+    if (!open) { el.classList.add('show'); renderNotifs(); }
+  }));
+  document.querySelectorAll('[data-keep]').forEach(m => m.addEventListener('click', e => e.stopPropagation()));
+  document.addEventListener('click', closeDropdowns);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDropdowns(); });
+
+  $('notifList').addEventListener('click', e => {
+    const it = e.target.closest('.notif-item'); if (!it) return;
+    notifs[it.dataset.i].read = true; save(); renderNotifs();
   });
-  $('myAccountLink') && $('myAccountLink').addEventListener('click', e => {
-    e.preventDefault(); closeAll();
+  $('markAllRead').onclick = () => { notifs.forEach(n => n.read = true); save(); renderNotifs(); };
+  $('viewAllNotifs').onclick = () => {
+    closeDropdowns();
+    document.querySelector('.nav-item[data-section="inquiries"]').click();
+  };
+  $('myAccountLink').onclick = e => {
+    e.preventDefault(); closeDropdowns();
     document.querySelector('.nav-item[data-section="settings"]').click();
-  });
-  $('logoutBtn') && $('logoutBtn').addEventListener('click', () => {
-    closeAll(); try { sessionStorage.clear(); } catch (e) {}
+  };
+  $('logoutBtn').onclick = () => {
+    closeDropdowns();
+    try { sessionStorage.clear(); } catch (e) {}
     window.location.replace('LandingPage.html');
-  });
+  };
+
+  renderNotifs();
 })();
-
-// Action Selectors
-const markAllRead = document.getElementById('markAllRead');
-const notifBadge = document.getElementById('notifBadge');
-const notifItems = document.querySelectorAll('.notif-item');
-const viewAllNotifs = document.getElementById('viewAllNotifs');
-const myAccountLink = document.getElementById('myAccountLink');
-const logoutBtn = document.getElementById('logoutBtn');
-
-// Toggle Notification Menu
-notifBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  accountMenu.classList.remove('show');
-  notifMenu.classList.toggle('show');
-});
-
-// Toggle Account Menu
-accountBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  notifMenu.classList.remove('show');
-  accountMenu.classList.toggle('show');
-});
-
-// Close active dropdowns on click outside
-document.addEventListener('click', (e) => {
-  if (!notifMenu.contains(e.target) && !notifBtn.contains(e.target)) {
-    notifMenu.classList.remove('show');
-  }
-  if (!accountMenu.contains(e.target) && !accountBtn.contains(e.target)) {
-    accountMenu.classList.remove('show');
-  }
-});
-
-// "Mark all as read" Functionality
-markAllRead.addEventListener('click', () => {
-  notifItems.forEach(item => item.classList.remove('unread'));
-  if (notifBadge) {
-    notifBadge.style.display = 'none';
-  }
-});
-
-// Individual notification item click (marks individual item as read)
-notifItems.forEach(item => {
-  item.addEventListener('click', () => {
-    if (item.classList.contains('unread')) {
-      item.classList.remove('unread');
-      const currentCount = parseInt(notifBadge.textContent) - 1;
-      if (currentCount > 0) {
-        notifBadge.textContent = currentCount;
-      } else {
-        notifBadge.style.display = 'none';
-      }
-    }
-  });
-});
-
-// "View All Notifications" Functionality
-viewAllNotifs.addEventListener('click', () => {
-  notifMenu.classList.remove('show');
-  if (typeof openSection === 'function') {
-    openSection('inquiries'); // Navigates to inquiries view section
-  }
-});
-
-// Account Menu Actions
-myAccountLink.addEventListener('click', (e) => {
-  e.preventDefault();
-  accountMenu.classList.remove('show');
-  // Clicking the real sidebar button opens System Settings and highlights it
-  document.querySelector('.nav-item[data-section="settings"]').click();
-});
-
-logoutBtn.addEventListener('click', () => {
-  accountMenu.classList.remove('show');
-  try { sessionStorage.clear(); } catch (e) {}
-  window.location.replace('LandingPage.html');   // replace() stops the Back button returning to the dashboard
-});
 
 /* ===== My Inquiries ===== */
 (function () {
@@ -1260,7 +1203,7 @@ function collect(b) {
 document.addEventListener('click', e => {
   if (!e.target.closest('#newInquiryBtn')) return;
   e.stopPropagation();
-  document.querySelectorAll('.dropdown-panel.show,.dropdown-card.show,.inq-date-pop.show')
+  document.querySelectorAll('.dropdown-menu.show,.inq-date-pop.show')
     .forEach(el => el.classList.remove('show'));
   resetForm();
   show('service-inquiry', 'inquiries');      // keeps "My Inquiries" highlighted
