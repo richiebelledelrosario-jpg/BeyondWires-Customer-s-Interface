@@ -1213,3 +1213,38 @@ html[data-theme="dark"] .sidebar{background:#081224}
   .nav-item,.inq-view,.pg-btn,.page-btn,.page-num,.si-slots button,.ts{min-height:40px}
   .si-day{width:32px;height:32px}
 }
+
+/* ---- Dropdowns (same look as SuperHomePage) ---- */
+.dropdown-container{position:relative}
+.dropdown-menu{position:absolute;right:0;top:calc(100% + 8px);min-width:180px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 10px 25px rgba(15,23,42,.12);display:none;z-index:1000;overflow:hidden}
+.dropdown-menu.show{display:block}
+.notif-menu{width:300px}
+.dropdown-menu .dropdown-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #f1f5f9;font-size:12px}
+.mark-read{font-size:11px;font-weight:600;color:var(--blue);cursor:pointer}
+.mark-read:hover{text-decoration:underline}
+.dropdown-menu .notif-list{max-height:240px;overflow-y:auto}
+.dropdown-menu .notif-item{display:block;padding:10px 16px;border-bottom:1px solid #f1f5f9;font-size:12px;cursor:pointer}
+.dropdown-menu .notif-item:hover{background:#f8fafc}
+.dropdown-menu .notif-item.unread{background:var(--blue-soft)}
+.dropdown-menu .notif-item span{display:block;color:#94a3b8;font-size:10px;margin-top:2px}
+.notif-empty{padding:18px;text-align:center;color:#94a3b8;font-size:12px}
+.dropdown-menu .user-info{padding:12px 16px;border-bottom:1px solid #f1f5f9}
+.user-name{font-size:12px;font-weight:700;color:var(--text)}
+.user-email{font-size:11px;color:var(--muted)}
+.menu-btn{display:flex;align-items:center;gap:8px;width:100%;padding:10px 16px;font-size:12px;color:#334155;background:none;border:none;cursor:pointer;text-align:left}
+.menu-btn:hover{background:var(--bg)}
+.menu-btn.center{justify-content:center;border-top:1px solid #f1f5f9;color:var(--blue);font-weight:600}
+.menu-btn.danger{color:#dc2626;border-top:1px solid #f1f5f9}
+
+/* dark mode */
+html[data-theme="dark"] .dropdown-menu{background:var(--card);border-color:var(--line)}
+html[data-theme="dark"] .dropdown-menu .dropdown-header,
+html[data-theme="dark"] .dropdown-menu .notif-item,
+html[data-theme="dark"] .dropdown-menu .user-info,
+html[data-theme="dark"] .menu-btn.center,
+html[data-theme="dark"] .menu-btn.danger{border-color:var(--line)}
+html[data-theme="dark"] .menu-btn{color:#b7c4da}
+html[data-theme="dark"] .menu-btn.danger{color:#f87171}
+html[data-theme="dark"] .menu-btn:hover,
+html[data-theme="dark"] .dropdown-menu .notif-item:hover{background:rgba(255,255,255,.05)}
+html[data-theme="dark"] .dropdown-menu .notif-item.unread{background:#14284a}
