@@ -3,167 +3,93 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BeyondWires Dashboard</title>
+<title>Customer - BeyondWires</title>
 <script>
   try { if (JSON.parse(localStorage.getItem('bw_theme')) === 'dark') document.documentElement.setAttribute('data-theme', 'dark'); } catch (e) {}
 </script>
 <link rel="stylesheet" href="../CSS/HomePage.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <script src="../JS/HomePage.js" defer></script>
 </head>
 <body>
 <div class="app">
-  <aside class="sidebar" id="sidebar">
-    <div class="brand">
-      <div class="brand-mark">BW</div>
-      <div class="brand-name">BEYONDWIRES</div>
-    </div>
-
-    <nav class="nav" aria-label="Main navigation">
-      <button class="nav-item active" data-section="dashboard" aria-current="page" title="Dashboard">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5M9 21v-6h6v6"/></svg>
-        <span class="nav-label">Dashboard</span>
-      </button>
-      <button class="nav-item" data-section="inquiries" title="My Inquiries">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M6 3.5h9l3 3V20.5H6z"/><path d="M14 3.5v4h4M9 12h6M9 15.5h4"/></svg>
-        <span class="nav-label">My Inquiries</span>
-      </button>
-      <button class="nav-item" data-section="quotations" title="Quotations">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M5 12h4V8H6.5A1.5 1.5 0 0 0 5 9.5zm0 0c0 3 1 5 4 6"/><path d="M14 12h4V8h-2.5A1.5 1.5 0 0 0 14 9.5zm0 0c0 3 1 5 4 6"/></svg>
-        <span class="nav-label">Quotations</span>
-      </button>
-      <button class="nav-item" data-section="documents" title="Documents">
-<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>        <span class="nav-label">Documents</span>
-      </button>
-    </nav>
-
-    <div class="sidebar-spacer"></div>
-
-    <div class="sidebar-footer">
-      <button class="nav-item" data-section="settings" title="System Settings">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19.2 13.2 1.1.9-1.7 2.9-1.3-.5a7.4 7.4 0 0 1-1.8 1l-.2 1.4H12l-.2-1.4a7.4 7.4 0 0 1-1.8-1l-1.3.5L7 14.1l1.1-.9a7.4 7.4 0 0 1 0-2.1L7 10.2l1.7-2.9 1.3.5a7.4 7.4 0 0 1 1.8-1l.2-1.4h3.3l.2 1.4a7.4 7.4 0 0 1 1.8 1l1.3-.5 1.7 2.9-1.1.9a7.4 7.4 0 0 1 0 2.1Z"/></svg>
-        <span class="nav-label">System Settings</span>
-      </button>
-    </div>
-  </aside>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img src="../IMG/logo.png" alt="Beyond Wires Logo" class="sidebar-logo">
+    <i class="fa-solid fa-bolt logo-mini"></i>
+  </div>
+  <nav class="sidebar-nav" aria-label="Main navigation">
+    <button class="nav-item active" data-section="dashboard" aria-current="page" title="Dashboard"><i class="fa-solid fa-house"></i><span class="label">Dashboard</span></button>
+    <button class="nav-item" data-section="inquiries" title="My Inquiries"><i class="fa-solid fa-inbox"></i><span class="label">My Inquiries</span></button>
+    <button class="nav-item" data-section="quotations" title="Quotations"><i class="fa-solid fa-file-invoice"></i><span class="label">Quotations</span></button>
+    <button class="nav-item" data-section="documents" title="Documents"><i class="fa-solid fa-folder-open"></i><span class="label">Documents</span></button>
+  </nav>
+  <div class="sidebar-section">
+    <span class="section-title">SYSTEM SUPPORT</span>
+    <button class="nav-item" data-section="settings" title="Settings"><i class="fa-solid fa-gear"></i><span class="label">Settings</span></button>
+  </div>
+</aside>
 
   <main class="main">
-    <header class="topbar">
-      <button class="toggle" id="sidebarToggle" aria-label="Toggle sidebar" title="Minimize sidebar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 4v16M14 8l4 4-4 4"/></svg>
+<header class="top-bar">
+  <div class="page-breadcrumb-group">
+    <span class="breadcrumb-trail" id="pageCrumb">CLIENT PORTAL</span>
+    <div class="title-row">
+      <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar" title="Minimize sidebar"><i class="fa-solid fa-angles-left"></i></button>
+      <h1 id="pageTitle">Dashboard</h1>
+    </div>
+    <p id="pageSub"></p>
+  </div>
+
+  <div class="user-profile-area">
+    <div class="search">
+      <input type="text" id="globalSearch" placeholder="Search tickets, devices, inquiries..." />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+    </div>
+
+    <div class="dropdown-wrapper">
+      <button class="notification-btn" id="notifBtn" title="Notifications" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 8.5h18C21 16 18 16 18 9Z"/><path d="M10 20h4"/></svg>
+        <span class="badge" id="notifBadge">3</span>
       </button>
-      <div class="search">
-        <input type="text" id="globalSearch" placeholder="Search tickets, devices, inquiries..." />
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+
+      <div class="dropdown-panel" id="notifMenu">
+        <div class="dropdown-header">
+          <span class="dropdown-title">Notifications</span>
+          <button class="action-btn" id="markAllRead">Mark all as read</button>
+        </div>
+        <div class="notif-list" id="notifList">
+          <!-- paste your 6 original <div class="notif-item ..."> blocks here, unchanged -->
+        </div>
+        <div class="dropdown-footer"><button class="footer-btn" id="viewAllNotifs">View All Notifications</button></div>
       </div>
-      <div class="top-actions">
-  <!-- Notification Trigger & Dropdown -->
-  <div class="dropdown-wrapper">
-    <button class="icon-btn" id="notifBtn" title="Notifications" aria-expanded="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 8.5h18C21 16 18 16 18 9Z"/><path d="M10 20h4"/></svg>
-      <span class="badge" id="notifBadge">3</span>
-    </button>
+    </div>
 
-    <!-- Notification Dropdown Panel -->
-    <div class="dropdown-panel" id="notifMenu">
-      <div class="dropdown-header">
-        <span class="dropdown-title">Notifications</span>
-        <button class="action-btn" id="markAllRead">Mark all as read</button>
-      </div>
-      
-      <div class="notif-list" id="notifList">
-        <div class="notif-item unread">
-          <span class="unread-dot"></span>
-          <div class="notif-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M16 13H8"></path><path d="M16 17H8"></path><path d="M10 9H8"></path></svg></div>
-          <div class="notif-content">
-            <p class="notif-text">Your inquiry <strong>INQ-2026-007</strong> has been acknowledged.</p>
-            <span class="notif-time">2 hours ago</span>
-          </div>
-        </div>
-
-        <div class="notif-item unread">
-          <span class="unread-dot"></span>
-          <div class="notif-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
-          <div class="notif-content">
-            <p class="notif-text">Quotation received for <strong>CCTV Installation project.</strong></p>
-            <span class="notif-time">5 hours ago</span>
-          </div>
-        </div>
-
-        <div class="notif-item unread">
-          <span class="unread-dot"></span>
-          <div class="notif-icon dark-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></div>
-          <div class="notif-content">
-            <p class="notif-text">Site visit scheduled for <strong>Oct 18, 2026 at 10:00 AM.</strong></p>
-            <span class="notif-time">Yesterday</span>
-          </div>
-        </div>
-
-        <div class="notif-item">
-          <span class="unread-dot"></span>
-          <div class="notif-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
-          <div class="notif-content">
-            <p class="notif-text">Payment confirmed for INQ-2026-003. Receipt available.</p>
-            <span class="notif-time">2 days ago</span>
-          </div>
-        </div>
-
-        <div class="notif-item">
-          <span class="unread-dot"></span>
-          <div class="notif-icon grey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
-          <div class="notif-content">
-            <p class="notif-text">Installation for INQ-2026-002 is now complete!</p>
-            <span class="notif-time">3 days ago</span>
-          </div>
-        </div>
-
-        <div class="notif-item">
-          <span class="unread-dot"></span>
-          <div class="notif-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
-          <div class="notif-content">
-            <p class="notif-text">Schedule change: Your installation moved to Oct 25.</p>
-            <span class="notif-time">4 days ago</span>
-          </div>
-        </div>
+    <div class="dropdown-wrapper">
+      <div class="profile-card" id="accountBtn" tabindex="0" role="button" aria-expanded="false">
+        <div class="avatar profile-avatar">JC</div>
+        <div class="profile-info"><div class="profile-name">Juan Dela Cruz</div><div class="profile-role">Client ID: #BW-9482</div></div>
+        <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
       </div>
 
-      <div class="dropdown-footer">
-        <button class="footer-btn" id="viewAllNotifs">View All Notifications</button>
+      <div class="dropdown-card" id="accountMenu">
+        <div class="user-info">
+          <div class="user-name">Juan Dela Cruz</div>
+          <div class="user-email">juan@email.com</div>
+        </div>
+        <div class="dropdown-divider"></div>
+        <a href="#settings" class="account-item" id="myAccountLink">
+          <!-- your original gear <svg> here -->
+          My Account
+        </a>
+        <button class="account-item logout-btn" id="logoutBtn">
+          <!-- your original logout <svg> here -->
+          Log Out
+        </button>
       </div>
     </div>
   </div>
-
-  <!-- Account Trigger & Dropdown -->
-  <div class="dropdown-wrapper">
-    <div class="profile" id="accountBtn" tabindex="0" role="button" aria-expanded="false">
-      <div class="avatar">JC</div>
-      <div class="profile-text">
-        <div class="profile-name">Juan Dela Cruz</div>
-        <div class="profile-id">Client ID: #BW-9482</div>
-      </div>
-    </div>
-
-    <!-- Account Card Dropdown -->
-    <div class="dropdown-card" id="accountMenu">
-      <div class="user-info">
-        <div class="user-name">Juan Dela Cruz</div>
-        <div class="user-email">juan@email.com</div>
-      </div>
-      <div class="dropdown-divider"></div>
-      <a href="#settings" class="account-item" id="myAccountLink">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        My Account
-      </a>
-      <button class="account-item logout-btn" id="logoutBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-        Log Out
-      </button>
-    </div>
-  </div>
-</div>
-
-      
-    </header>
-
+</header>
     <div class="content">
       <section class="section-view active" id="dashboard">
         <div class="welcome">
@@ -217,14 +143,22 @@
           <section class="card panel">
             <div class="panel-head"><div class="panel-title">Upcoming Site Schedules</div></div>
             <div class="schedule-list">
-              <div class="schedule">
-                <div class="date"><strong>18</strong>JAN</div>
-                <div><div class="schedule-name">Physical Site Inspection</div><div class="schedule-meta">Apex Logistics HQ<br>Technician: <b>Marcus V.</b></div></div>
+            <div class="schedule">
+              <div class="date"><strong>18</strong>JAN</div>
+              <div>
+                <div class="schedule-name">Physical Site Inspection</div>
+                <div class="schedule-meta">Apex Logistics HQ<br>Technician: <b>Marcus V.</b></div>
+                <button type="button" class="inq-link-btn sch-change" data-date="2026-01-18">Change schedule</button>
               </div>
-              <div class="schedule">
-                <div class="date"><strong>22</strong>JAN</div>
-                <div><div class="schedule-name">Photoelectric Smoke Testing</div><div class="schedule-meta">HQ Zone B Server Compound<br>Technician: <b>Sarah K.</b></div></div>
-              </div>
+            </div>
+            <div class="schedule">
+              <div class="date"><strong>22</strong>JAN</div>
+              <div>
+    <div class="schedule-name">Photoelectric Smoke Testing</div>
+    <div class="schedule-meta">HQ Zone B Server Compound<br>Technician: <b>Sarah K.</b></div>
+    <button type="button" class="inq-link-btn sch-change" data-date="2026-01-22">Change schedule</button>
+  </div>
+</div>
             </div>
           </section>
         </div>
@@ -446,6 +380,7 @@
 
 <section class="section-view" id="service-inquiry">
   <form class="si-card" id="siForm" novalidate>
+    <button type="button" class="si-back" id="siBack">&lsaquo; Back to My Inquiries</button>
     <h2 class="si-title">New Service Inquiry</h2>
     <p class="si-sub">Please fill in the details below to submit your system specification request.</p>
     <hr class="si-rule">
@@ -486,6 +421,7 @@
         <button type="button" class="qa-reject" id="qaReject">Reject</button>
       </div>
       <p class="qa-result" id="qaResult" hidden></p>
+      <button type="button" class="inq-outline-btn qa-resched" id="qaResched" hidden>Change installation schedule</button>
     </aside>
   </div>
 </section>
@@ -785,7 +721,50 @@
     </button>
   </div>
 </div>
-
+<div class="inq-modal" id="rsModal" aria-hidden="true">
+  <div class="inq-modal-card rs-card" role="dialog" aria-modal="true" aria-labelledby="rsTitle">
+    <h2 id="rsTitle">Change Schedule</h2>
+    <p class="inq-view-sub" id="rsSub"></p>
+    <div class="si-cal">
+      <div class="si-cal-head">
+        <button type="button" id="rsPrev" aria-label="Previous month">&lsaquo;</button>
+        <b id="rsMonth"></b>
+        <button type="button" id="rsNext" aria-label="Next month">&rsaquo;</button>
+      </div>
+      <div class="si-days" id="rsDays"></div>
+      <div class="si-legend">
+        <span><i style="background:var(--blue)"></i>Available</span>
+        <span><i style="background:var(--orange)"></i>Limited Slots</span>
+        <span><i style="background:#b5bfcd"></i>Unavailable</span>
+      </div>
+    </div>
+    <div class="si-label">Available Time Slots</div>
+    <div class="si-slots" id="rsSlots">
+      <button type="button" data-time="9:00 AM">9:00 AM</button>
+      <button type="button" data-time="10:30 AM">10:30 AM</button>
+      <button type="button" data-time="1:00 PM">1:00 PM</button>
+      <button type="button" data-time="3:30 PM">3:30 PM</button>
+    </div>
+    <label class="si-field">Reason for rescheduling
+  <select id="rsReason">
+    <option value="" selected disabled>Select a reason...</option>
+    <option>Schedule conflict</option><option>Nobody available on-site</option>
+    <option>Weather concerns</option><option>Emergency / personal matter</option>
+    <option>Need a different time of day</option>
+    <option value="Other">Other (type your reason)</option>
+  </select>
+</label>
+<label class="si-field" id="rsOtherWrap" hidden>Tell us more
+  <textarea id="rsOther" rows="3" maxlength="200" placeholder="Type your reason..."></textarea>
+</label>
+<p class="si-error" id="rsReasonErr" hidden></p>
+    <p class="si-error" id="rsError" hidden></p>
+    <div class="inq-modal-actions">
+      <button type="button" class="inq-outline-btn" data-close>Cancel</button>
+      <button type="button" class="inq-primary" id="rsSave">Confirm change</button>
+    </div>
+  </div>
+</div>
 <div class="inq-toast" id="qpToast"></div>
 
     </div>
