@@ -48,7 +48,7 @@
       ['NVR Storage Upgrade - Hard Drive Calibration','Server Room','Yesterday, 4:12 PM','COMPLETED'],
       ['Alarm Signal Triggered: Vault Entry Door','Gated Comp.','Jan 15, 2:30 AM','RESOLVED']
     ];
-    const csv = rows.map(row => row.map(cell => '"' + cell.replaceAll('"','""') + '"').join(',')).join('\\n');
+    const csv = rows.map(row => row.map(cell => '"' + cell.replaceAll('"','""') + '"').join(',')).join('\n');
     const blob = new Blob([csv], {type:'text/csv'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -57,15 +57,49 @@
   });
   }
 
+(function () {
+  const $ = id => document.getElementById(id);
+  const notifBtn = $('notifBtn'), notifMenu = $('notifMenu');
+  const accountBtn = $('accountBtn'), accountMenu = $('accountMenu');
+  const notifBadge = $('notifBadge');
+  const closeAll = () => [notifMenu, accountMenu].forEach(m => m && m.classList.remove('show'));
 
+  notifBtn && notifBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    const open = notifMenu && notifMenu.classList.contains('show');
+    closeAll(); if (notifMenu && !open) notifMenu.classList.add('show');
+  });
+  accountBtn && accountBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    const open = accountMenu && accountMenu.classList.contains('show');
+    closeAll(); if (accountMenu && !open) accountMenu.classList.add('show');
+  });
+  document.addEventListener('click', e => {
+    if (notifMenu && !notifMenu.contains(e.target) && !notifBtn.contains(e.target)) notifMenu.classList.remove('show');
+    if (accountMenu && !accountMenu.contains(e.target) && !accountBtn.contains(e.target)) accountMenu.classList.remove('show');
+  });
 
-
-
-// Dropdown Toggle Selectors
-const notifBtn = document.getElementById('notifBtn');
-const notifMenu = document.getElementById('notifMenu');
-const accountBtn = document.getElementById('accountBtn');
-const accountMenu = document.getElementById('accountMenu');
+  const items = document.querySelectorAll('.notif-item');
+  const setBadge = () => {
+    if (!notifBadge) return;
+    const n = document.querySelectorAll('.notif-item.unread').length;
+    notifBadge.textContent = n; notifBadge.style.display = n ? '' : 'none';
+  };
+  $('markAllRead') && $('markAllRead').addEventListener('click', () => { items.forEach(i => i.classList.remove('unread')); setBadge(); });
+  items.forEach(i => i.addEventListener('click', () => { i.classList.remove('unread'); setBadge(); }));
+  $('viewAllNotifs') && $('viewAllNotifs').addEventListener('click', () => {
+    closeAll();
+    const n = document.querySelector('.nav-item[data-section="inquiries"]'); n && n.click();
+  });
+  $('myAccountLink') && $('myAccountLink').addEventListener('click', e => {
+    e.preventDefault(); closeAll();
+    document.querySelector('.nav-item[data-section="settings"]').click();
+  });
+  $('logoutBtn') && $('logoutBtn').addEventListener('click', () => {
+    closeAll(); try { sessionStorage.clear(); } catch (e) {}
+    window.location.replace('LandingPage.html');
+  });
+})();
 
 // Action Selectors
 const markAllRead = document.getElementById('markAllRead');
@@ -284,18 +318,16 @@ logoutBtn.addEventListener('click', () => {
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModals(); });
 
 /* View button */
-body.addEventListener('click', e => {
-  const btn = e.target.closest('.inq-view');
-  if (!btn) return;
-  const i = inquiries.find(x => x.id === btn.dataset.id);
-  if (!i) return;
+let viewing = null;
 
-  /* Older sample rows have no saved details, so fall back to what they do have */
-  const d = i.details || {
+function openView(i) {
+  viewing = i;
+  const d = i.details || (i.details = {
     name:'Juan Dela Cruz', email:'juan@email.com',
     blocks:[{ address:'', place:'', option:i.type, site:i.site, visit:'', items:[], budget:'' }]
-  };
+  });
   const cell = (label, value) => `<div><span>${label}</span><b>${esc(value) || '\u2014'}</b></div>`;
+  const canMove = i.status !== 'Failed';
 
   $('vSub').textContent = `${i.id} \u2022 ${fmt(i.date)}`;
   $('vName').textContent = d.name || '\u2014';
@@ -309,45 +341,97 @@ body.addEventListener('click', e => {
         ${cell('Customer Purchase Option', b.option)}
         ${cell('Site Visit', b.site)}
         ${b.site === 'Yes'
-          ? cell('Preferred Date & Time', b.visit)
+          ? `<div><span>Preferred Date &amp; Time</span><b>${esc(b.visit) || '\u2014'}</b>
+               ${canMove ? `<button type="button" class="inq-outline-btn rs-btn" data-resched="${n}">Change schedule</button>` : ''}</div>`
           : cell('Selected', (b.items || []).join(', ')) + cell('Budget', b.budget)}
       </div>
     </div>`).join('');
   openModal(viewModal);
+}
+
+body.addEventListener('click', e => {
+  const btn = e.target.closest('.inq-view');
+  if (!btn) return;
+  const i = inquiries.find(x => x.id === btn.dataset.id);
+  if (i) openView(i);
 });
 
-  /* New Inquiry (the button is redirected to the Service Inquiry page by the later script) */
-  $('newInquiryBtn').addEventListener('click', () => { newForm.reset(); openModal(newModal); });
+$('vBlocks').addEventListener('click', e => {
+  const btn = e.target.closest('[data-resched]');
+  if (!btn || !viewing) return;
 
-  newForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const t = new Date();
-    const iso = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
-    const next = Math.max(...inquiries.map(i => parseInt(i.id.split('-')[2], 10))) + 1;
-    const id = `INQ-${t.getFullYear()}-${String(next).padStart(3, '0')}`;
+  const b = viewing.details.blocks[Number(btn.dataset.resched)];
 
-      inquiries.unshift({
-      id, date: iso,
-      type: $('nType').value, site: $('nSite').value,
-      status: 'Pending', notes: $('nNotes').value.trim(),
-      details: window.__inqDetails || null
-    });
-window.__inqDetails = null;
+  window.bwReschedule.open({
+    title: 'Change Site Visit Schedule',
+    sub: viewing.id,
+    date: b.visitDate || '',
+    time: b.visitTime || '',
 
-    // Clear filters so the new entry is visible at the top of page 1
-    state.search = ''; state.status = 'all'; state.from = state.to = ''; state.page = 1;
-    searchEl.value = ''; statusEl.value = 'all'; fromEl.value = toEl.value = '';
-    updateDateLabel();
+    onSave: (date, time, reason) => {
+      b.visitDate = date;
+      b.visitTime = time;
+      b.rescheduleReason = reason;
+      b.visit = `${fmt(date)} \u2022 ${time}`;
+      openView(viewing);
+    }
+  });
+});
 
-    closeModals(); render();
-    toast.textContent = `Inquiry ${id} submitted`;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2500);
+/* New Inquiry (the button is redirected to the Service Inquiry page by the later script) */
+$('newInquiryBtn').addEventListener('click', () => {
+  newForm.reset();
+  openModal(newModal);
+});
+
+newForm.addEventListener('submit', e => {
+  e.preventDefault();
+
+  const t = new Date();
+
+  const iso = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
+
+  const next = Math.max(
+    ...inquiries.map(i => parseInt(i.id.split('-')[2], 10))
+  ) + 1;
+
+  const id = `INQ-${t.getFullYear()}-${String(next).padStart(3, '0')}`;
+
+  inquiries.unshift({
+    id,
+    date: iso,
+    type: $('nType').value,
+    site: $('nSite').value,
+    status: 'Pending',
+    notes: $('nNotes').value.trim(),
+    details: window.__inqDetails || null
   });
 
-  render();
-})();
+  window.__inqDetails = null;
 
+  // Clear filters so the new entry is visible at the top of page 1
+  state.search = '';
+  state.status = 'all';
+  state.from = state.to = '';
+  state.page = 1;
+
+  searchEl.value = '';
+  statusEl.value = 'all';
+  fromEl.value = toEl.value = '';
+
+  updateDateLabel();
+
+  closeModals();
+  render();
+
+  toast.textContent = `Inquiry ${id} submitted`;
+  toast.classList.add('show');
+
+  setTimeout(() => toast.classList.remove('show'), 2500);
+});
+
+render();
+})();
 /* ===== Quotations ===== */
 (function () {
   const PAGE_SIZE = 6;
@@ -524,6 +608,7 @@ function paintActions() {
   const pending = current.status === 'Pending';
   $('qaApprove').disabled = !pending;
   $('qaReject').disabled = !pending;
+  $('qaResched').hidden = !current.schedule;
   const res = $('qaResult');
   res.hidden = pending;
   res.className = 'qa-result ' + current.status.toLowerCase();
@@ -541,6 +626,39 @@ $('qaReject').addEventListener('click', () => {
   if (!current || current.status !== 'Pending') return;
   document.dispatchEvent(new CustomEvent('quo:reject', { detail: current }));
 });
+$('qaResched').addEventListener('click', () => {
+  if (!current || !current.schedule) return;
+  window.bwReschedule.open({
+    title:'Change Installation Schedule', sub:current.id,
+    date:current.schedule.date, time:current.schedule.time,
+   onSave:(date, time, reason) => { current.schedule = { date, time, reason }; $('qaDocs').innerHTML = pagesHtml(current); }
+  });
+});
+/* ===== Customer: Back button + reschedule reason ===== */
+(function () {
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#siBack')) return;
+    const n = document.querySelector('.nav-item[data-section="inquiries"]'); if (n) n.click();
+  });
+  window.addEventListener('load', () => {
+    const $ = s => document.querySelector(s);
+    const rs = window.bwReschedule, sel = $('#rsReason'), other = $('#rsOther'),
+          wrap = $('#rsOtherWrap'), err = $('#rsReasonErr'), save = $('#rsSave');
+    if (!rs || !sel || !save) return;
+    const reason = () => sel.value === 'Other' ? other.value.trim() : sel.value;
+    const reset = () => { sel.value = ''; other.value = ''; wrap.hidden = true; err.hidden = true; };
+    sel.addEventListener('change', () => { wrap.hidden = sel.value !== 'Other'; err.hidden = true; if (!wrap.hidden) other.focus(); });
+    save.addEventListener('click', e => {
+      if (!sel.value || (sel.value === 'Other' && reason().length < 5)) {
+        e.stopImmediatePropagation();
+        err.textContent = sel.value ? 'Please describe your reason (at least 5 characters).' : 'Please select a reason for rescheduling.';
+        err.hidden = false;
+      }
+    }, true);
+    const open = rs.open.bind(rs);
+    rs.open = o => { reset(); const cb = o.onSave; return open(Object.assign({}, o, { onSave: (d, t) => cb && cb(d, t, reason()) })); };
+  });
+})();
 
 /* Download: uses q.file if you add one to a quotation, otherwise builds a summary PDF */
 $('qaDownload').addEventListener('click', () => {
@@ -828,9 +946,13 @@ window.bwQuo = {
     return `
     <div class="si-block">
       ${n > 1 ? `<div class="si-block-title">Inquiry ${n}</div>` : ''}
-      <label class="si-field">Address
-        <input type="text" class="b-address" placeholder="Enter your full installation address">
-      </label>
+      <div class="si-field">Address
+        <div class="pl-wrap">
+          <input type="text" class="b-address" placeholder="Search your installation address" autocomplete="off">
+          <div class="pl-list" hidden></div>
+        </div>
+        <small class="pl-status"></small>
+      </div>
       <label class="si-field">Type of Place
         <select class="b-place">
           <option value="" selected disabled>Select type...</option>
@@ -1043,7 +1165,7 @@ window.bwQuo = {
 function validate(b) {
   const q = s => b.el.querySelector(s);
   const errs = [];
-  if (!q('.b-address').value.trim()) errs.push('Please enter your installation address.');
+    if (q('.b-address').dataset.ok !== '1') errs.push('Please pick an address from the suggestions that is inside our service area.');
   if (!q('.b-place').value) errs.push('Please select the type of place.');
   if (!q('.b-option').value) errs.push('Please select a purchase option.');
   if (!b.site) errs.push('Please choose whether you would like a site visit.');
@@ -1075,6 +1197,7 @@ function validate(b) {
   }
 
   /* Structured copy of one inquiry block, used by the View popup */
+
 function collect(b) {
   const q = s => b.el.querySelector(s);
   const budget = q('.b-budget').value === 'custom'
@@ -1086,10 +1209,13 @@ function collect(b) {
     option: q('.b-option').value,
     site: b.site,
     visit: b.site === 'Yes' ? `${fmtDate(b.date)} \u2022 ${b.time}` : '',
+    visitDate: b.site === 'Yes' ? b.date : '',
+    visitTime: b.site === 'Yes' ? b.time : '',
     items: b.site === 'No' ? [...b.items] : [],
     budget: b.site === 'No' ? budget : ''
   };
-}
+};
+
 
   function resetForm() {
     form.reset();
@@ -1128,16 +1254,23 @@ function collect(b) {
     show('inquiries', 'inquiries');
   });
 
-  /* Send both buttons to this form instead of the old page/modal.
-     Capture phase runs first, so the old handlers never fire. */
-  document.addEventListener('click', e => {
-    if (!e.target.closest('#inquireBtn, #newInquiryBtn')) return;
-    e.stopPropagation();
-    document.querySelectorAll('.dropdown-panel.show,.dropdown-card.show,.inq-date-pop.show')
-      .forEach(el => el.classList.remove('show'));
-    resetForm();
-    show('service-inquiry', 'dashboard');
-  }, true);
+/* "+ New Inquiry" (inside My Inquiries) opens the form.
+   "Inquire Now" is no longer intercepted, so it uses the original
+   openSection('inquiries') and lands on the list first. */
+document.addEventListener('click', e => {
+  if (!e.target.closest('#newInquiryBtn')) return;
+  e.stopPropagation();
+  document.querySelectorAll('.dropdown-panel.show,.dropdown-card.show,.inq-date-pop.show')
+    .forEach(el => el.classList.remove('show'));
+  resetForm();
+  show('service-inquiry', 'inquiries');      // keeps "My Inquiries" highlighted
+}, true);
+
+/* Back button */
+$('siBack').addEventListener('click', () => {
+  resetForm();
+  show('inquiries', 'inquiries');
+});
 
   resetForm();
 })();
@@ -1625,3 +1758,274 @@ function collect(b) {
   applyTheme(savedTheme);
   paintTheme();
 })();
+
+/* ===== Change Schedule popup (reusable) ===== */
+(function () {
+  const $ = id => document.getElementById(id);
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const pad = n => String(n).padStart(2, '0');
+  const toIso = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const avail = d => (d < today || d.getDay() === 0) ? 'unavailable' : (d.getDate() % 6 === 0 ? 'limited' : 'available');
+
+  const modal = $('rsModal'), err = $('rsError');
+  let cfg = null;
+  const s = { year:0, month:0, date:'', time:'' };
+
+  const setErr = m => { err.textContent = m || ''; err.hidden = !m; };
+  const paintSlots = () => $('rsSlots').querySelectorAll('button')
+    .forEach(b => b.classList.toggle('selected', b.dataset.time === s.time));
+
+  function renderCal() {
+    $('rsMonth').textContent = `${MONTHS[s.month]} ${s.year}`;
+    $('rsPrev').disabled = s.year === today.getFullYear() && s.month === today.getMonth();
+    const first = new Date(s.year, s.month, 1).getDay();
+    const dim = new Date(s.year, s.month + 1, 0).getDate();
+    let h = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => `<span class="si-dow">${d}</span>`).join('');
+    for (let i = 0; i < first; i++) h += '<span></span>';
+    for (let n = 1; n <= dim; n++) {
+      const d = new Date(s.year, s.month, n), a = avail(d), iso = toIso(d);
+      h += `<button type="button" class="si-day ${a}${iso === s.date ? ' selected' : ''}" data-iso="${iso}" ${a === 'unavailable' ? 'disabled' : ''}>${n}</button>`;
+    }
+    $('rsDays').innerHTML = h;
+  }
+
+  function open(c) {
+    cfg = c; s.date = c.date || ''; s.time = c.time || '';
+    if (s.date && new Date(s.date + 'T00:00') < today) s.date = s.time = '';   // past schedule: pick a new one
+    const base = s.date ? new Date(s.date + 'T00:00') : today;
+    s.year = base.getFullYear(); s.month = base.getMonth();
+    $('rsTitle').textContent = c.title; $('rsSub').textContent = c.sub || '';
+    setErr(''); renderCal(); paintSlots();
+    modal.classList.add('show'); modal.setAttribute('aria-hidden', 'false');
+  }
+  const close = () => { modal.classList.remove('show'); modal.setAttribute('aria-hidden', 'true'); };
+
+  modal.addEventListener('click', e => { if (e.target === modal || e.target.hasAttribute('data-close')) close(); });
+  $('rsPrev').addEventListener('click', () => { if (s.month === 0) { s.month = 11; s.year--; } else s.month--; renderCal(); });
+  $('rsNext').addEventListener('click', () => { if (s.month === 11) { s.month = 0; s.year++; } else s.month++; renderCal(); });
+  $('rsDays').addEventListener('click', e => {
+    const d = e.target.closest('.si-day');
+    if (d && !d.disabled) { s.date = d.dataset.iso; setErr(''); renderCal(); }
+  });
+  $('rsSlots').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    s.time = b.dataset.time; setErr(''); paintSlots();
+  });
+  $('rsSave').addEventListener('click', () => {
+    if (!s.date || !s.time) return setErr('Please choose a new date and time slot.');
+    if (cfg.date === s.date && cfg.time === s.time) return setErr('That is your current schedule. Pick a different one.');
+    cfg.onSave(s.date, s.time);
+    close();
+    const t = $('stToast'); t.textContent = 'Schedule updated'; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2400);
+  });
+
+  window.bwReschedule = { open };
+
+  /* Dashboard: Upcoming Site Schedules (site inspection) */
+  document.querySelectorAll('.sch-change').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.schedule');
+      const name = card.querySelector('.schedule-name').textContent;
+      bwReschedule.open({
+        title:'Change Site Inspection Schedule', sub:name,
+        date:btn.dataset.date, time:btn.dataset.time || '',
+        onSave:(date, time) => {
+          btn.dataset.date = date; btn.dataset.time = time;
+          const [y, m, d] = date.split('-').map(Number);
+          const mon = new Date(y, m - 1, d).toLocaleDateString('en-US', { month:'short' }).toUpperCase();
+          card.querySelector('.date').innerHTML = `<strong>${d}</strong>${mon}`;
+        }
+      });
+    });
+  });
+})();
+
+/* ===== Maps simulator: autocomplete + simulated backend area check ===== */
+(function () {
+  const HQ = { lat:14.6507, lng:120.9830 };   // sample HQ
+  const RADIUS_KM = 40;                        // sample service radius
+  const PLACES = [
+    { id:'p1',  name:'Monumento, Caloocan City',          lat:14.6544, lng:120.9840 },
+    { id:'p2',  name:'SM City Grand Central, Caloocan',   lat:14.6560, lng:120.9840 },
+    { id:'p3',  name:'Quezon City Hall, Quezon City',     lat:14.6488, lng:121.0509 },
+    { id:'p4',  name:'Ayala Avenue, Makati City',         lat:14.5547, lng:121.0244 },
+    { id:'p5',  name:'Bonifacio Global City, Taguig',     lat:14.5507, lng:121.0503 },
+    { id:'p6',  name:'Ortigas Center, Pasig City',        lat:14.5866, lng:121.0614 },
+    { id:'p7',  name:'Mall of Asia, Pasay City',          lat:14.5352, lng:120.9822 },
+    { id:'p8',  name:'Malolos, Bulacan',                  lat:14.8433, lng:120.8114 },
+    { id:'p9',  name:'Antipolo, Rizal',                   lat:14.5860, lng:121.1760 },
+    { id:'p10', name:'Tagaytay City, Cavite',             lat:14.1153, lng:120.9621 },
+    { id:'p11', name:'Baguio City, Benguet',              lat:16.4023, lng:120.5960 },
+    { id:'p12', name:'Cebu City, Cebu',                   lat:10.3157, lng:123.8854 }
+  ];
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const rad = x => x * Math.PI / 180;
+  function km(a, b) {   // haversine distance
+    const h = Math.sin(rad(b.lat - a.lat) / 2) ** 2 +
+      Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(rad(b.lng - a.lng) / 2) ** 2;
+    return 2 * 6371 * Math.asin(Math.sqrt(h));
+  }
+
+  /* Swap these two for the real thing later */
+  window.mockMaps = {
+    // Real: Places Autocomplete in the browser, with componentRestrictions: { country: 'ph' }
+    async autocomplete(text) {
+      await wait(150 + Math.random() * 200);
+      const t = text.trim().toLowerCase();
+      if (t.length < 2) return [];
+      return PLACES.filter(p => p.name.toLowerCase().includes(t)).slice(0, 5)
+                   .map(p => ({ placeId:p.id, text:p.name }));
+    },
+    // Real: POST /api/places/validate { placeId }. The server looks up coordinates itself
+    // and runs the distance or polygon check. The client never sends its own lat/lng.
+    async validate(placeId) {
+      await wait(300);
+      const p = PLACES.find(x => x.id === placeId);
+      if (!p) return { ok:false, reason:'Unknown place.' };
+      const d = km(HQ, p);
+      return d <= RADIUS_KM
+        ? { ok:true, distanceKm:+d.toFixed(1) }
+        : { ok:false, distanceKm:+d.toFixed(1),
+            reason:`Outside our service area (${d.toFixed(0)} km from HQ, limit ${RADIUS_KM} km).` };
+    }
+  };
+
+  const wrap = document.getElementById('siBlocks');
+  let timer, token = 0;
+  const parts = input => {
+    const box = input.closest('.pl-wrap');
+    return { list: box.querySelector('.pl-list'), status: box.parentElement.querySelector('.pl-status') };
+  };
+  const setStatus = (el, cls, msg) => { el.className = 'pl-status ' + cls; el.textContent = msg; };
+
+  wrap.addEventListener('input', e => {
+    const input = e.target.closest('.b-address');
+    if (!input) return;
+    const { list, status } = parts(input);
+    input.dataset.ok = ''; input.dataset.placeId = '';     // typing again invalidates the earlier pick
+    status.textContent = '';
+    clearTimeout(timer);
+    const mine = ++token;
+    timer = setTimeout(async () => {
+      const res = await mockMaps.autocomplete(input.value);
+      if (mine !== token) return;                          // ignore stale responses
+      list.innerHTML = res.map(r => `<button type="button" class="pl-item" data-id="${r.placeId}">${r.text}</button>`).join('');
+      list.hidden = !res.length;
+    }, 250);
+  });
+
+  wrap.addEventListener('mousedown', async e => {
+    const item = e.target.closest('.pl-item');
+    if (!item) return;
+    e.preventDefault();
+    const box = item.closest('.pl-wrap'), input = box.querySelector('.b-address');
+    const { list, status } = parts(input);
+    input.value = item.textContent; list.hidden = true;
+    setStatus(status, 'wait', 'Checking service area\u2026');
+    const r = await mockMaps.validate(item.dataset.id);
+    if (r.ok) {
+      input.dataset.ok = '1'; input.dataset.placeId = item.dataset.id;
+      setStatus(status, 'ok', `\u2713 Within our service area (${r.distanceKm} km from HQ)`);
+    } else {
+      input.dataset.ok = '';
+      setStatus(status, 'bad', r.reason);
+    }
+  });
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.pl-wrap')) wrap.querySelectorAll('.pl-list').forEach(l => l.hidden = true);
+  });
+})();
+
+/* ===== Header title per section + clickable stat cards ===== */
+(function () {
+  const T = {
+    dashboard:['CLIENT PORTAL','Dashboard','Your BeyondWires account at a glance.'],
+    inquiries:['CLIENT PORTAL','My Inquiries','Track and submit your inquiries.'],
+    'service-inquiry':['MY INQUIRIES','New Service Inquiry','Tell us what you need.'],
+    quotations:['CLIENT PORTAL','Quotations','Review, approve and pay your quotations.'],
+    'quotation-view':['QUOTATIONS','Quotation Approval','Review and respond to this quotation.'],
+    'quotation-schedule':['QUOTATIONS','Payment Method & Schedule','Choose your installation schedule.'],
+    'quotation-payment':['QUOTATIONS','Payment Transaction','Submit your payment proof.'],
+    documents:['CLIENT PORTAL','Documents','Your quotations, receipts and certificates.'],
+    settings:['SYSTEM SUPPORT','Settings','Theme, account and contacts.']
+  };
+  const $ = id => document.getElementById(id);
+  const paint = () => {
+    const a = document.querySelector('.section-view.active'), t = a && T[a.id];
+    if (!t) return;
+    $('pageCrumb').textContent = t[0]; $('pageTitle').textContent = t[1]; $('pageSub').textContent = t[2];
+  };
+  new MutationObserver(paint).observe(document.querySelector('.content'),
+    { subtree:true, attributes:true, attributeFilter:['class'] });
+  paint();
+
+  const targets = ['inquiries', 'quotations', 'documents', 'documents'];
+  document.querySelectorAll('.stat').forEach((card, i) => {
+    const go = () => document.querySelector(`.nav-item[data-section="${targets[i]}"]`).click();
+    card.tabIndex = 0; card.setAttribute('role', 'button'); card.style.cursor = 'pointer';
+    card.addEventListener('click', go);
+    card.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+  });
+})();
+
+
+/* ===== Shared: date limits (2019-2028) + mobile drawer ===== */
+(function () {
+  'use strict';
+  const MIN = '2019-01-01', MAX = '2028-12-31', MN = 2019, MX = 2028;
+  const MON = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  function toast(msg) {
+    const t = document.createElement('div'); t.className = 'bw-toast'; t.textContent = msg;
+    document.body.appendChild(t); setTimeout(() => t.remove(), 2800);
+  }
+  const limitInputs = () => document.querySelectorAll('input[type=date]').forEach(i => { i.min = MIN; i.max = MAX; });
+  limitInputs();
+  document.addEventListener('change', e => {
+    const i = e.target;
+    if (i.type === 'date' && i.value && (i.value < MIN || i.value > MAX)) { i.value = ''; toast('Please choose a date between 2019 and 2028.'); }
+  }, true);
+
+  const parse = t => { const m = /([A-Za-z]+)\s+(\d{4})/.exec(t || ''); const i = m ? MON.indexOf(m[1]) : -1; return i < 0 ? null : { m: i, y: +m[2] }; };
+  const lock = (b, on) => {
+    if (!b) return;
+    if (on) { b.dataset.bwLock = 1; b.disabled = true; }
+    else if (b.dataset.bwLock) { delete b.dataset.bwLock; b.disabled = false; }
+  };
+  function syncCals() {
+    document.querySelectorAll('.si-cal-head,.cp-head').forEach(h => {
+      const p = parse((h.querySelector('b') || {}).textContent); if (!p) return;
+      const k = p.y * 12 + p.m;
+      lock(h.firstElementChild, k <= MN * 12);
+      lock(h.lastElementChild, k >= MX * 12 + 11);
+    });
+  }
+  let raf; new MutationObserver(() => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { limitInputs(); syncCals(); }); })
+    .observe(document.body, { subtree: true, childList: true, characterData: true });
+  syncCals();
+
+  const mq = matchMedia('(max-width: 900px)');
+  const bd = document.createElement('div'); bd.className = 'bw-backdrop'; document.body.appendChild(bd);
+  const closeNav = () => document.body.classList.remove('nav-open');
+  document.addEventListener('click', e => {
+    if (mq.matches && e.target.closest('.sidebar-toggle')) {
+      e.stopImmediatePropagation(); e.preventDefault(); document.body.classList.toggle('nav-open'); return;
+    }
+    if (e.target === bd || (mq.matches && e.target.closest('.sidebar .nav-item'))) closeNav();
+  }, true);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNav(); });
+  mq.addEventListener('change', closeNav);
+})();
+
+
+
+
+
+
+// GANITO KPAG SA TOTOONG MAP API (sabi ni Claude)//
+// Moving to the real API:
+// Replace mockMaps.autocomplete with the Google widget.
+// Replace mockMaps.validate with fetch('/api/places/validate', …).
+// Re-run the same check again when the inquiry is submitted. Don't trust the earlier "ok" from the browser.
