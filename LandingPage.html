@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BeyondWires|Security System Services</title>
+  <link rel="icon" type="image/png" href="../Assets/BWLOGO.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link rel="stylesheet" href="../CSS/LandingPage.css" />
+  <script src="../JS/LandingPage.js" defer></script>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-top">
+      <a class="brand" href="#home" aria-label="BeyondWires">
+        <img class="brand-logo" src="../Assets/blcklogo-removebg-preview.png" alt="BEYONDWIRES">
+      </a>
+
+      <!-- Upper Right Controls (Theme Toggle + Account Button) -->
+      <div class="top-controls">
+        <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle dark/light mode">
+          <span class="material-icons-round" id="themeIcon">dark_mode</span>
+        </button>
+
+        <button class="account-btn" id="accountBtn" aria-label="Log in or create account">
+          <span class="material-icons-round">account_circle</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-content" id="home">
+      <p class="eyebrow">SMART SECURITY. REAL PROTECTION.</p>
+      <h1>SECURITY THAT GOES<br>BEYOND PROTECTS YOUR<br>WORLD</h1>
+      <p class="hero-subtitle">Complete security solutions designed around you and your property.</p>
+      <div class="hero-actions">
+        <button class="primary-btn" data-scroll="#services">Explore Services</button>
+        <button class="ghost-btn" data-scroll="#works">View Our Work</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section works-section" id="works">
+      <div class="section-heading">
+        <span class="section-label">OUR WORKS</span>
+        <h2>Security Solutions in Action</h2>
+        <p>Explore selected installations and projects completed for different properties.</p>
+      </div>
+
+      <div class="works-scroller">
+        <article class="work-card">
+          <img src="../Assets/Forthinker.png" alt="Modern building with security cameras">
+          <div class="card-body">
+            <span class="tag">Forthinker, Inc</span>
+            <h3>CCTV|Biometrics|Smart Door Lock|Intercom</h3>
+            <p>Complete Security coverage for a Company property.</p>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <img src="../Assets/NUAT THAI.png" alt="Server room">
+          <div class="card-body">
+            <span class="tag">NUAT THAI</span>
+            <h3>4-Channel IR CCTV</h3>
+            <p>Securing employees and customer time of relaxation.</p>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <img src="../Assets/Residential.png" alt="Modern residential property">
+          <div class="card-body">
+            <span class="tag">RESIDENTIAL SECURITY</span>
+            <h3>Complete Residential Security</h3>
+            <p>Street lights powered by the sun.</p>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <img src="../Assets/residentials.png" alt="Office interior">
+          <div class="card-body">
+            <span class="tag">RESIDENTIAL</span>
+            <h3>16-CHANNEL IR CCTV</h3>
+            <p>Integrated protection designed for a modern home.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section services-section" id="services">
+      <div class="section-heading">
+        <span class="section-label">OUR SERVICES</span>
+        <h2>Protection built around your needs</h2>
+        <p>From installation to maintenance, we provide dependable security services.</p>
+      </div>
+  
+      <div class="service-grid">
+  <div class="service-card"><span class="material-icons-round">visibility</span><h3>Ocular / Site Visit</h3><p>On-site inspection to assess your property and security needs.</p></div>
+  <div class="service-card"><span class="material-icons-round">construction</span><h3>Installation</h3><p>Professional setup of cameras and security equipment.</p></div>
+  <div class="service-card"><span class="material-icons-round">system_update_alt</span><h3>Upgrades</h3><p>Improve your existing system with newer equipment.</p></div>
+  <div class="service-card"><span class="material-icons-round">build</span><h3>Repairs / Relocations</h3><p>Fix faulty devices or move them to better positions.</p></div>
+  <div class="service-card"><span class="material-icons-round">plumbing</span><h3>Rough-ins, Piping, Molding</h3><p>Clean, concealed cable routing and conduit work.</p></div>
+  <div class="service-card"><span class="material-icons-round">smartphone</span><h3>Mobile Viewing Configuration</h3><p>View your cameras remotely from your phone.</p></div>
+  <div class="service-card"><span class="material-icons-round">support_agent</span><h3>After-Sales Services</h3><p>Continued support and assistance after installation.</p></div>
+  <div class="service-card"><span class="material-icons-round">electrical_services</span><h3>Electrical Wiring</h3><p>Safe, organized wiring for your security devices.</p></div>
+</div>
+    </section>
+
+   <section class="section products-section" id="products">
+  <div class="section-heading">
+    <span class="section-label">OUR PRODUCTS</span>
+    <h2>Reliable equipment for every layer of protection</h2>
+    <p>Choose from dependable security products for homes, offices, and commercial spaces.</p>
+  </div>
+
+  <div class="product-grid">
+    <div class="product-card"><span class="material-icons-round">videocam</span><h3>IR CCTVs</h3><button class="small-btn" data-product="ir-cctv">View Details</button></div>
+    <div class="product-card"><span class="material-icons-round">settings_ethernet</span><h3>IP CCTVs</h3><button class="small-btn" data-product="ip-cctv">View Details</button></div>
+    <div class="product-card"><span class="material-icons-round">fingerprint</span><h3>Biometrics</h3><button class="small-btn" data-product="biometrics">View Details</button></div>
+    <div class="product-card"><span class="material-icons-round">speaker_phone</span><h3>Intercom</h3><button class="small-btn" data-product="intercom">View Details</button></div>
+    <div class="product-card"><span class="material-icons-round">doorbell</span><h3>Doorbell</h3><button class="small-btn" data-product="doorbell">View Details</button></div>
+    <div class="product-card"><span class="material-icons-round">lock</span><h3>Smart Door Lock</h3><button class="small-btn" data-product="smart-lock">View Details</button></div>
+    <div class="product-card"><span class="material-icons-round">wb_sunny</span><h3>Solar Street Lights</h3><button class="small-btn" data-product="solar-light">View Details</button></div>
+    <div class="product-card"><span class="material-icons-round">cable</span><h3>CCTV Accessories</h3><button class="small-btn" data-product="accessories">View Details</button></div>
+  </div>
+
+  <!-- Details container -->
+  <div class="product-details" id="productDetails" hidden>
+    <button class="details-close" id="detailsClose" aria-label="Close details"><span class="material-icons-round">close</span></button>
+    <h3 id="detailsTitle"></h3>
+    <p id="detailsDesc"></p>
+    <ul id="detailsList"></ul>
+    <button class="primary-btn" data-scroll="#contact">Request a Quotation</button>
+  </div>
+</section>
+
+    <section class="section packages-section" id="packages">
+      <div class="section-heading">
+        <span class="section-label">PACKAGES</span>
+        <h2>Security packages for different needs</h2>
+        <p>Start with a package and customize it according to your property.</p>
+      </div>
+
+      <div class="package-grid">
+        <div class="package-card">
+          <span class="package-label">STARTER</span>
+          <h3>Basic Home Security</h3>
+          <p class="package-note">Essential protection for smaller spaces.</p>
+          <ul><li>Basic CCTV coverage</li><li>Remote viewing</li><li>Installation support</li><li>System orientation</li></ul>
+          <button class="primary-btn full">Get Started</button>
+        </div>
+        <div class="package-card featured">
+          <span class="package-label">POPULAR</span>
+          <h3>Premium Business Security</h3>
+          <p class="package-note">Expanded protection for offices and businesses.</p>
+          <ul><li>Multi-camera CCTV system</li><li>Network video recording</li><li>Access control</li><li>Maintenance support</li></ul>
+          <button class="primary-btn full">Get Started</button>
+        </div>
+        <div class="package-card">
+          <span class="package-label">CUSTOM</span>
+          <h3>Enterprise Complete</h3>
+          <p class="package-note">A security setup designed around your site.</p>
+          <ul><li>Site assessment</li><li>Customized equipment list</li><li>Integrated security system</li><li>Dedicated consultation</li></ul>
+          <button class="primary-btn full">Get Started</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq-section" id="faq">
+      <div class="section-heading">
+        <span class="section-label">FREQUENTLY ASKED QUESTIONS</span>
+        <h2>Have questions?</h2>
+        <p>Click a question to reveal its answer.</p>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question">What types of security systems do you install?<span class="material-icons-round">expand_more</span></button>
+          <div class="faq-answer"><p>We install CCTV, access control, alarm systems, network security equipment, and other integrated security solutions.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">Can you inspect my property before installation?<span class="material-icons-round">expand_more</span></button>
+          <div class="faq-answer"><p>Yes. A site inspection can be used to identify security requirements and determine suitable equipment and placement.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">Can I request a customized security setup?<span class="material-icons-round">expand_more</span></button>
+          <div class="faq-answer"><p>Yes. Customized solutions can be planned based on your property, coverage requirements, equipment needs, and operational priorities.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">Do you provide maintenance and repair?<span class="material-icons-round">expand_more</span></button>
+          <div class="faq-answer"><p>Yes. Maintenance and repair services are available to help keep installed security equipment operating properly.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">How do I request a quotation?<span class="material-icons-round">expand_more</span></button>
+          <div class="faq-answer"><p>Use the inquiry or contact option to provide your requirements. The security team can then assess the project and prepare the appropriate quotation.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+      <div class="contact-content">
+        <div>
+          <span class="section-label light">BEGIN YOUR SECURE TRANSITION</span>
+          <h2>Let's secure what matters to you.</h2>
+          <p>Tell us about your property and security requirements.</p>
+          <div class="contact-details">
+            <p><span class="material-icons-round">location_on</span> Caloocan City, Metro Manila</p>
+            <p><span class="material-icons-round">phone</span> +63 900 000 0000</p>
+            <p><span class="material-icons-round">email</span> info@BEYONDWIRES.com</p>
+          </div>
+        </div>
+        <div class="contact-image"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+   <div class="brand">
+      <img class="brand-logofooter" src="../Assets/whitelogo-removebg-preview.png" alt="BeyondWires logo">
+  </div>
+    <div class="footer-links">
+      <a href="#works">Our Works</a>
+      <a href="#services">Services</a>
+      <a href="#products">Products</a>
+      <a href="#packages">Packages</a>
+    </div>
+    <div class="footer-links">
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+      <a href="#" id="footerAccount">My Account</a>
+    </div>
+    <div class="socials">
+      <span class="material-icons-round">facebook</span>
+      <span class="material-icons-round">camera_alt</span>
+      <span class="material-icons-round">mail</span>
+    </div>
+  </footer>
+
+  <div class="account-modal" id="accountModal" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="accountTitle">
+      <button class="modal-close" id="modalClose" aria-label="Close"><span class="material-icons-round">close</span></button>
+      <span class="material-icons-round account-large">account_circle</span>
+      <h2 id="accountTitle">Welcome</h2>
+      <p>Log in to your account or create a new one to continue.</p>
+      <button class="primary-btn full" id="loginBtn">Log In</button>
+      <button class="ghost-btn full" id="createBtn">Create Account</button>
+    </div>
+  </div>
+
+
+</body>
+</html>

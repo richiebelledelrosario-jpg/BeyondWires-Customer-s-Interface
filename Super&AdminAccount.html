@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <link rel="stylesheet" href="../CSS/Super&AdminAccount.css">
+    <script src="../JS/Super&AdminAccount.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-container">
+        <div class="login-card">
+            <div class="card-left">
+                <div class="left-overlay">
+                    <div class="brand-logo">
+                        <img src="bwlogo.png" alt="Beyond Wires Logo" class="logo-img">
+                    </div>
+                    <div class="left-content">
+                        <h1>Total Control over Your Security.</h1>
+                        <div class="enterprise-box">
+                            <div class="shield-icon"><i class="fa-solid fa-shield"></i></div>
+                            <div class="enterprise-text">
+                                <strong>Enterprise Security</strong>
+                                <span>Bank-grade encryption and multi-factor authentication protocols.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-right">
+                <div class="form-container">
+                    <div class="form-header">
+                        <h2>Welcome Back</h2>
+                        <p>Please enter your credentials to access your account.</p>
+                    </div>
+                    <div class="restricted-warning">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span><strong>Restricted Area:</strong> Access limited to authorized administrators only.</span>
+                    </div>
+                    <form id="loginForm" novalidate>
+                        <div class="input-group">
+                            <label id="roleLabel">Sign in as</label>
+                            <div class="role-picker" id="rolePicker" role="radiogroup" aria-labelledby="roleLabel">
+                                <button type="button" class="role-opt active" data-role="admin" role="radio" aria-checked="true"><i class="fa-solid fa-user-shield"></i> Admin</button>
+                                <button type="button" class="role-opt" data-role="superadmin" role="radio" aria-checked="false"><i class="fa-solid fa-user-gear"></i> Super Admin</button>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="email">Email Address or Username</label>
+                            <div class="input-wrapper">
+                                <i class="fa-regular fa-envelope input-icon"></i>
+                                <input type="text" id="email" placeholder="name@company.com" autocomplete="username">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="password">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-lock input-icon"></i>
+                                <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+                                <i class="fa-regular fa-eye-slash toggle-icon" id="togglePassword"></i>
+                            </div>
+                        </div>
+
+                        <div class="login-error" id="loginError" role="alert"></div>
+
+                        <button type="submit" class="submit-btn" id="submitBtn">Log In as Admin</button>
+
+                        <div class="divider">
+                            <a href="LandingPage.html" class="home-link">Go back to homepage</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            © 2026 BeyondWires Systems. All rights reserved. Secured by University of Caloocan City
+        </div>
+    </div>
+</body>
+</html>
